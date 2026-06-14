@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZohoVerse Partners — Certified Zoho Partner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0a;
+    --bg2: #111110;
+    --bg3: #181815;
+    --text: #fff8f0;
+    --muted: #9a8f7a;
+    --purple: #e8441a;
+    --pink: #ff8c00;
+    --accent: #ff6b35;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  #cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  #cursor.big {
+    width: 48px; height: 48px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(13,13,20,0.6);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    font-size: 13px;
+    padding: 9px 22px;
+    border: 1px solid rgba(192,132,252,0.4);
+    border-radius: 100px;
+    color: var(--accent);
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .nav-cta:hover { background: rgba(192,132,252,0.1); border-color: var(--accent); }
+
+  /* Hero */
+  #hero {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  #hero-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    padding: 0 48px;
+    max-width: 580px;
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .hero-h1 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: clamp(40px, 5.5vw, 72px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 24px;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.9s 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .hero-h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 420px;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.9s 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 14px;
+    pointer-events: all;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.9s 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .btn-primary {
+    padding: 13px 30px;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: opacity 0.2s, transform 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+  .btn-ghost {
+    padding: 13px 30px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: border-color 0.2s, background 0.2s;
+    text-decoration: none;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 48px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    opacity: 0;
+    animation: fadeUp 1s 1.4s forwards;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--accent);
+    animation: scanLine 2s 1.4s infinite;
+  }
+  @keyframes scanLine { 0%{left:-100%} 100%{left:100%} }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stats strip */
+  .stats-strip {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    overflow: hidden;
+  }
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 32px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: 42px;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    display: block;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Services */
+  .services-section {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 60px;
+    max-width: 480px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .service-card {
+    background: var(--bg2);
+    padding: 40px 36px;
+    transition: background 0.25s;
+    cursor: default;
+  }
+  .service-card:hover { background: var(--bg3); }
+  .service-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .service-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .service-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* Work section */
+  .work-section {
+    padding: 0 48px 120px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .work-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .work-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    cursor: pointer;
+  }
+  .work-card:nth-child(1) { grid-column: span 2; aspect-ratio: 16/9; }
+  .work-bg {
+    width: 100%; height: 100%;
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+  .work-card:hover .work-bg { transform: scale(1.04); }
+  .work-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(13,13,20,0.92) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .work-card:hover .work-overlay { opacity: 1; }
+  .work-tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .work-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Process */
+  .process-section {
+    padding: 120px 48px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+  .process-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 60px;
+  }
+  .process-step {
+    background: var(--bg2);
+    padding: 40px 32px;
+    position: relative;
+  }
+  .step-num {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: 48px;
+    color: rgba(255,255,255,0.06);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .step-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 17px;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* CTA */
+  .cta-section {
+    padding: 140px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-inner { position: relative; z-index: 1; }
+  .cta-blob {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse at center, rgba(102,68,255,0.18) 0%, transparent 70%);
+    pointer-events: none;
+    animation: pulseCta 4s ease-in-out infinite alternate;
+  }
+  @keyframes pulseCta {
+    from { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+    to { transform: translate(-50%,-50%) scale(1.2); opacity: 1; }
+  }
+  .cta-h2 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: clamp(36px, 5vw, 64px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-sub {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 48px;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--text);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--text); }
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(122,122,154,0.5);
+  }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero-content { padding: 0 24px; }
+    .scroll-hint { left: 24px; }
+    .stats-strip { flex-wrap: wrap; }
+    .stat-item { flex: 0 0 50%; border-right: none; border-bottom: 1px solid var(--border); }
+    .services-section, .work-section, .process-section .process-inner, .cta-section { padding-left: 24px; padding-right: 24px; }
+    .services-grid, .process-steps { grid-template-columns: 1fr; }
+    .work-grid { grid-template-columns: 1fr; }
+    .work-card:nth-child(1) { grid-column: span 1; aspect-ratio: 4/3; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<nav>
+  <a href="#" class="nav-logo">zohoverse<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#solutions">Solutions</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get a free consultation</a>
+</nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Certified Zoho Partner</p>
+    <h1 class="hero-h1">Run your<br><em>entire</em><br>business on Zoho</h1>
+    <p class="hero-sub">ZohoVerse is a certified Zoho implementation partner. We deploy, customize, and integrate the full Zoho suite so your team can move faster and work smarter.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">Book free consultation →</a>
+      <a href="#solutions" class="btn-ghost">Explore solutions</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>scroll to explore</span>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-item reveal"><span class="stat-num">500+</span><span class="stat-label">Businesses deployed</span></div>
+  <div class="stat-item reveal reveal-delay-1"><span class="stat-num">8</span><span class="stat-label">Years as Zoho partner</span></div>
+  <div class="stat-item reveal reveal-delay-2"><span class="stat-num">40+</span><span class="stat-label">Zoho apps mastered</span></div>
+  <div class="stat-item reveal reveal-delay-3"><span class="stat-num">98%</span><span class="stat-label">Client retention</span></div>
+</div>
+
+<section class="services-section" id="services">
+  <p class="section-eyebrow reveal">What we implement</p>
+  <h2 class="section-title reveal reveal-delay-1">The full Zoho suite, expertly deployed</h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon" style="background:rgba(232,68,26,0.15)">📊</div>
+      <div class="service-name">Zoho CRM</div>
+      <div class="service-desc">Full CRM setup with custom pipelines, automation rules, AI forecasting, and deep integration with your existing tools.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon" style="background:rgba(255,140,0,0.15)">📚</div>
+      <div class="service-name">Zoho Books & Finance</div>
+      <div class="service-desc">End-to-end finance automation — invoicing, expense tracking, GST/VAT compliance, and multi-currency support.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon" style="background:rgba(255,107,53,0.15)">👥</div>
+      <div class="service-name">Zoho People & HR</div>
+      <div class="service-desc">HR lifecycle management from onboarding to payroll, leave tracking, performance reviews, and org charts.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon" style="background:rgba(232,68,26,0.15)">📣</div>
+      <div class="service-name">Zoho Marketing Suite</div>
+      <div class="service-desc">Campaigns, social media, landing pages, and analytics — all wired together inside Zoho Marketing Plus.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon" style="background:rgba(255,140,0,0.15)">🔧</div>
+      <div class="service-name">Zoho Creator & Deluge</div>
+      <div class="service-desc">Custom low-code apps and workflow automations built on Zoho Creator with Deluge scripting tailored to your ops.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-icon" style="background:rgba(255,107,53,0.15)">🔗</div>
+      <div class="service-name">Zoho One Integration</div>
+      <div class="service-desc">Unify your stack under Zoho One — all 45+ apps speaking to each other, eliminating data silos for good.</div>
+    </div>
+  </div>
+</section>
+
+<section class="work-section" id="solutions">
+  <div class="work-header">
+    <div>
+      <p class="section-eyebrow reveal">Client success</p>
+      <h2 class="section-title reveal reveal-delay-1" style="margin-bottom:0">Businesses transformed with Zoho</h2>
+    </div>
+    <a href="#contact" class="btn-ghost reveal" style="white-space:nowrap;pointer-events:all">See all case studies →</a>
+  </div>
+  <div class="work-grid">
+    <div class="work-card reveal">
+      <div class="work-bg" style="background:linear-gradient(135deg,#1a0800,#7c2d00,#e8441a)"></div>
+      <div class="work-overlay">
+        <p class="work-tag">Zoho CRM · Manufacturing · 2024</p>
+        <p class="work-name">Apex Industries — 3× faster deal closure</p>
+      </div>
+    </div>
+    <div class="work-card reveal reveal-delay-1">
+      <div class="work-bg" style="background:linear-gradient(135deg,#0a1010,#0f3d2e,#10b981)"></div>
+      <div class="work-overlay">
+        <p class="work-tag">Zoho Books · Retail · 2024</p>
+        <p class="work-name">Greenleaf Co — Zero manual invoicing</p>
+      </div>
+    </div>
+    <div class="work-card reveal reveal-delay-2">
+      <div class="work-bg" style="background:linear-gradient(135deg,#100800,#7c4800,#ff8c00)"></div>
+      <div class="work-overlay">
+        <p class="work-tag">Zoho One · SaaS · 2025</p>
+        <p class="work-name">CloudStack — Full ops unification</p>
+      </div>
+    </div>
+    <div class="work-card reveal reveal-delay-1">
+      <div class="work-bg" style="background:linear-gradient(135deg,#0a0a18,#1e1e5f,#6366f1)"></div>
+      <div class="work-overlay">
+        <p class="work-tag">Zoho People · Healthcare · 2025</p>
+        <p class="work-name">Medica Group — 200-staff HR rollout</p>
+      </div>
+    </div>
+    <div class="work-card reveal reveal-delay-2">
+      <div class="work-bg" style="background:linear-gradient(135deg,#120508,#5c1022,#e11d48)"></div>
+      <div class="work-overlay">
+        <p class="work-tag">Zoho Creator · Logistics · 2024</p>
+        <p class="work-name">SwiftFreight — Custom dispatch app</p>
+      </div>
+    </div>
+    <div class="work-card reveal reveal-delay-3">
+      <div class="work-bg" style="background:linear-gradient(135deg,#0d0800,#4a3000,#d97706)"></div>
+      <div class="work-overlay">
+        <p class="work-tag">Zoho CRM + Books · Real Estate · 2025</p>
+        <p class="work-name">Landmark Realty — Full pipeline visibility</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process-section" id="process">
+  <div class="process-inner">
+    <p class="section-eyebrow reveal">Our implementation process</p>
+    <h2 class="section-title reveal reveal-delay-1">Go live without the guesswork</h2>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-num">01</div>
+        <div class="step-name">Audit & Plan</div>
+        <div class="step-desc">We map your current workflows, data sources, and pain points to design the exact Zoho stack you need — nothing more.</div>
+      </div>
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-num">02</div>
+        <div class="step-name">Configure</div>
+        <div class="step-desc">Custom modules, automations, roles, and integrations built to your business logic — not Zoho's generic defaults.</div>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-num">03</div>
+        <div class="step-name">Migrate & Train</div>
+        <div class="step-desc">Clean data migration from your old systems plus hands-on training for every team that will use the platform.</div>
+      </div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="step-num">04</div>
+        <div class="step-name">Support & Scale</div>
+        <div class="step-desc">Dedicated post-launch support, monthly check-ins, and ongoing optimization as your business grows.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <div class="cta-blob"></div>
+  <div class="cta-inner">
+    <p class="section-eyebrow reveal">Ready to transform your ops?</p>
+    <h2 class="cta-h2 reveal reveal-delay-1">Let's find the right<br>Zoho plan for you</h2>
+    <p class="cta-sub reveal reveal-delay-2">Free 45-minute consultation. No pressure, no jargon — just a clear picture of what Zoho can do for your business.</p>
+    <div class="reveal reveal-delay-3" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="mailto:hello@zohoverse.io" class="btn-primary">hello@zohoverse.io →</a>
+      <a href="#" class="btn-ghost">Book a free call</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">zohoverse<span>.</span></div>
+  <ul class="footer-links">
+    <li><a href="#">Solutions</a></li>
+    <li><a href="#">Case Studies</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">LinkedIn</a></li>
+    <li><a href="#">Twitter</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 ZohoVerse · Certified Zoho Partner</p>
+</footer>
+
+<!-- Three.js r128 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  // ─── CURSOR ───────────────────────────────────────────
+  const cursor = document.getElementById('cursor');
+  let cx = window.innerWidth/2, cy = window.innerHeight/2;
+  let tx = cx, ty = cy;
+  document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  document.querySelectorAll('a, button, .work-card, .service-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+  function animCursor() {
+    cx += (tx - cx) * 0.12;
+    cy += (ty - cy) * 0.12;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  // ─── THREE.JS BLOB ────────────────────────────────────
+  const canvas = document.getElementById('hero-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 6);
+
+  // Simplex noise inline (simplex 3D)
+  const noiseGLSL = `
+    vec3 mod289v3(vec3 x){return x-floor(x*(1./289.))*289.;}
+    vec4 mod289v4(vec4 x){return x-floor(x*(1./289.))*289.;}
+    vec4 permute(vec4 x){return mod289v4(((x*34.)+1.)*x);}
+    vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-.85373472095314*r;}
+    float snoise(vec3 v){
+      const vec2 C=vec2(1./6.,1./3.);
+      const vec4 D=vec4(0.,.5,1.,2.);
+      vec3 i=floor(v+dot(v,C.yyy));
+      vec3 x0=v-i+dot(i,C.xxx);
+      vec3 g=step(x0.yzx,x0.xyz);
+      vec3 l=1.-g;
+      vec3 i1=min(g.xyz,l.zxy);
+      vec3 i2=max(g.xyz,l.zxy);
+      vec3 x1=x0-i1+C.xxx;
+      vec3 x2=x0-i2+C.yyy;
+      vec3 x3=x0-D.yyy;
+      i=mod289v3(i);
+      vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+      float n_=.142857142857;
+      vec3 ns=n_*D.wyz-D.xzx;
+      vec4 j=p-49.*floor(p*ns.z*ns.z);
+      vec4 x_=floor(j*ns.z);
+      vec4 y_=floor(j-7.*x_);
+      vec4 x2_=x_*ns.x+ns.yyyy;
+      vec4 y2_=y_*ns.x+ns.yyyy;
+      vec4 h=1.-abs(x2_)-abs(y2_);
+      vec4 b0=vec4(x2_.xy,y2_.xy);
+      vec4 b1=vec4(x2_.zw,y2_.zw);
+      vec4 s0=floor(b0)*2.+1.;
+      vec4 s1=floor(b1)*2.+1.;
+      vec4 sh=-step(h,vec4(0.));
+      vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;
+      vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+      vec3 p0=vec3(a0.xy,h.x);
+      vec3 p1=vec3(a0.zw,h.y);
+      vec3 p2=vec3(a1.xy,h.z);
+      vec3 p3=vec3(a1.zw,h.w);
+      vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+      p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
+      vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);
+      m=m*m;
+      return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+    }
+  `;
+
+  const vertexShader = `
+    ${noiseGLSL}
+    uniform float uTime;
+    uniform float uMorphStrength;
+    varying vec3 vNormal;
+    varying float vNoise;
+    void main(){
+      float n = snoise(position * 0.9 + uTime * 0.18);
+      float n2 = snoise(position * 2.1 - uTime * 0.12) * 0.4;
+      float displacement = (n + n2) * uMorphStrength;
+      vec3 newPos = position + normal * displacement;
+      vNoise = n * 0.5 + 0.5;
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+    }
+  `;
+
+  const fragmentShader = `
+    uniform float uTime;
+    varying vec3 vNormal;
+    varying float vNoise;
+    vec3 hsv2rgb(vec3 c){
+      vec4 K=vec4(1.,2./3.,1./3.,3.);
+      vec3 p=abs(fract(c.xxx+K.xyz)*6.-K.www);
+      return c.z*mix(K.xxx,clamp(p-K.xxx,0.,1.),c.y);
+    }
+    void main(){
+      float fresnel = pow(1.0 - max(dot(vNormal, vec3(0.0,0.0,1.0)), 0.0), 2.5);
+      vec3 deepRed   = vec3(0.91, 0.27, 0.10);
+      vec3 orange    = vec3(1.0,  0.55, 0.0);
+      vec3 amber     = vec3(0.95, 0.38, 0.05);
+      vec3 col = mix(deepRed, orange, vNoise);
+      col = mix(col, amber, fresnel * 0.6);
+      col += fresnel * 0.4;
+      float alpha = 0.82 + fresnel * 0.18;
+      gl_FragColor = vec4(col, alpha);
+    }
+  `;
+
+  const geometry = new THREE.SphereGeometry(2, 128, 128);
+  const material = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      uTime: { value: 0 },
+      uMorphStrength: { value: 0.0 }
+    },
+    transparent: true,
+    side: THREE.FrontSide
+  });
+
+  const blob = new THREE.Mesh(geometry, material);
+  blob.position.set(2.8, 0, 0);
+  scene.add(blob);
+
+  // Wireframe halo
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: 0xe8441a,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.04
+  });
+  const wireGeo = new THREE.SphereGeometry(2.02, 32, 32);
+  const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+  wireMesh.position.copy(blob.position);
+  scene.add(wireMesh);
+
+  // Lights
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+  scene.add(ambientLight);
+  const pointLight1 = new THREE.PointLight(0xe8441a, 3, 20);
+  pointLight1.position.set(3, 3, 3);
+  scene.add(pointLight1);
+  const pointLight2 = new THREE.PointLight(0xff8c00, 2, 20);
+  pointLight2.position.set(-3, -2, 2);
+  scene.add(pointLight2);
+
+  // Mouse parallax
+  let mouseX = 0, mouseY = 0;
+  let targetX = 0, targetY = 0;
+  let isHoveringBlob = false;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  // Blob entrance: spring from scale 0
+  let blobScale = 0;
+  let blobScaleTarget = 1;
+
+  // Animate
+  let startTime = performance.now();
+  let morphTarget = 0.35;
+  let morphCurrent = 0;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const elapsed = (performance.now() - startTime) * 0.001;
+
+    // Spring scale in on load
+    blobScale += (blobScaleTarget - blobScale) * 0.04;
+    blob.scale.setScalar(blobScale);
+    wireMesh.scale.setScalar(blobScale);
+
+    // Morph strength lerp
+    morphCurrent += (morphTarget - morphCurrent) * 0.05;
+    material.uniforms.uTime.value = elapsed;
+    material.uniforms.uMorphStrength.value = morphCurrent;
+
+    // Mouse parallax
+    targetX += (mouseX - targetX) * 0.04;
+    targetY += (mouseY - targetY) * 0.04;
+    blob.rotation.y = elapsed * 0.12 + targetX * 0.5;
+    blob.rotation.x = -targetY * 0.3 + Math.sin(elapsed * 0.4) * 0.05;
+    wireMesh.rotation.copy(blob.rotation);
+
+    // Light orbit
+    pointLight1.position.x = Math.sin(elapsed * 0.7) * 4;
+    pointLight1.position.z = Math.cos(elapsed * 0.7) * 4;
+    pointLight2.position.x = Math.sin(elapsed * 0.5 + Math.PI) * 3;
+    pointLight2.position.z = Math.cos(elapsed * 0.5 + Math.PI) * 3;
+
+    // Idle breathing
+    const breathe = 1 + Math.sin(elapsed * 0.7) * 0.018;
+    blob.scale.setScalar(blobScale * breathe);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Blob hover detection — boost morph
+  document.getElementById('hero').addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const ny = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera({ x: nx, y: ny }, camera);
+    const hits = raycaster.intersectObject(blob);
+    if (hits.length > 0) {
+      morphTarget = 0.6;
+      cursor.classList.add('big');
+    } else {
+      morphTarget = 0.35;
+    }
+  });
+
+  // Resize
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    blob.position.x = window.innerWidth < 768 ? 0 : 2.8;
+  });
+
+  if (window.innerWidth < 768) blob.position.set(0, 0.5, 0);
+
+  // ─── SCROLL REVEAL ────────────────────────────────────
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.reveal').forEach(el => {
+      el.style.transition = 'none';
+      el.classList.add('visible');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>
